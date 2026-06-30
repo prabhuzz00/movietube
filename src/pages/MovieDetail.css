@@ -1,0 +1,626 @@
+.movie-detail {
+  background-color: #000000;
+  min-height: 100vh;
+  padding-top: 70px;
+}
+
+.detail-hero {
+  position: relative;
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.detail-overlay {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0.7) 50%,
+    rgba(0, 0, 0, 0.4) 100%
+  ),
+  linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.95) 100%
+  );
+  padding: 4rem 4%;
+}
+
+.detail-content {
+  display: flex;
+  gap: 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-top: 2rem;
+}
+
+.detail-poster {
+  flex-shrink: 0;
+  width: 350px;
+}
+
+.detail-poster img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+}
+
+.detail-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.detail-title {
+  color: #ffffff;
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.1;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.detail-meta {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #ffffff;
+  font-size: 1.1rem;
+  flex-wrap: wrap;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 700;
+}
+
+.rating svg {
+  width: 22px;
+  height: 22px;
+  color: #db0000;
+}
+
+.genres {
+  color: #564d4d;
+}
+
+.detail-overview {
+  color: #ffffff;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  margin: 0 0 2rem 0;
+  max-width: 800px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.detail-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.detail-button {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.detail-button svg {
+  width: 24px;
+  height: 24px;
+}
+
+.detail-button.play {
+  background-color: #db0000;
+  color: #ffffff;
+}
+
+.detail-button.play:hover {
+  background-color: #831010;
+  transform: scale(1.05);
+}
+
+.detail-button.trailer {
+  background-color: rgba(86, 77, 77, 0.8);
+  color: #ffffff;
+}
+
+.detail-button.trailer:hover {
+  background-color: rgba(86, 77, 77, 1);
+  transform: scale(1.05);
+}
+
+.detail-cast {
+  color: #ffffff;
+}
+
+.detail-cast h3 {
+  font-size: 1.2rem;
+  margin: 0 0 0.5rem 0;
+  color: #564d4d;
+}
+
+.detail-cast p {
+  font-size: 1rem;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.similar-section {
+  padding: 2rem 0;
+}
+
+.seasons-section {
+  padding: 3rem 4%;
+  background-color: #000000;
+}
+
+.seasons-title {
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 2rem 0;
+}
+
+.seasons-list {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.player-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.95);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.player-modal:fullscreen {
+  padding: 0;
+  background-color: #000000;
+}
+
+.player-modal:-webkit-full-screen {
+  padding: 0;
+  background-color: #000000;
+}
+
+.player-modal:-moz-full-screen {
+  padding: 0;
+  background-color: #000000;
+}
+
+.player-modal:-ms-fullscreen {
+  padding: 0;
+  background-color: #000000;
+}
+
+.close-player {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  background-color: rgba(0, 0, 0, 0.8);
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 2001;
+}
+
+.fullscreen-toggle {
+  position: absolute;
+  top: 2rem;
+  right: 5rem;
+  background-color: rgba(0, 0, 0, 0.8);
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 2001;
+}
+
+.fullscreen-toggle:hover {
+  background-color: #db0000;
+  transform: scale(1.1);
+}
+
+.fullscreen-toggle svg {
+  width: 28px;
+  height: 28px;
+  color: #ffffff;
+}
+
+.next-episode-btn {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  background-color: rgba(219, 0, 0, 0.9);
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 2001;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.next-episode-btn:hover {
+  background-color: #db0000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(219, 0, 0, 0.5);
+}
+
+.next-episode-btn svg {
+  width: 24px;
+  height: 24px;
+  color: #ffffff;
+}
+
+.episode-info-overlay {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+  padding: 0.8rem 1.2rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  z-index: 2001;
+  backdrop-filter: blur(10px);
+}
+
+.player-modal:fullscreen .close-player {
+  top: 1rem;
+  right: 1rem;
+}
+
+.player-modal:-webkit-full-screen .close-player {
+  top: 1rem;
+  right: 1rem;
+}
+
+.player-modal:-moz-full-screen .close-player {
+  top: 1rem;
+  right: 1rem;
+}
+
+.player-modal:-ms-fullscreen .close-player {
+  top: 1rem;
+  right: 1rem;
+}
+
+.close-player:hover {
+  background-color: #db0000;
+  transform: scale(1.1);
+}
+
+.close-player svg {
+  width: 28px;
+  height: 28px;
+  color: #ffffff;
+}
+
+.player-container {
+  width: 100%;
+  max-width: 1400px;
+  aspect-ratio: 16/9;
+  background-color: #000000;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+}
+
+.player-modal:fullscreen .player-container {
+  max-width: 100%;
+  width: 100vw;
+  height: 100vh;
+  aspect-ratio: auto;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.player-modal:-webkit-full-screen .player-container {
+  max-width: 100%;
+  width: 100vw;
+  height: 100vh;
+  aspect-ratio: auto;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.player-modal:-moz-full-screen .player-container {
+  max-width: 100%;
+  width: 100vw;
+  height: 100vh;
+  aspect-ratio: auto;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.player-modal:-ms-fullscreen .player-container {
+  max-width: 100%;
+  width: 100vw;
+  height: 100vh;
+  aspect-ratio: auto;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.detail-loading,
+.detail-error {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.detail-error h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.detail-error button {
+  padding: 0.8rem 2rem;
+  background-color: #db0000;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.detail-error button:hover {
+  background-color: #831010;
+}
+
+@media (max-width: 1024px) {
+  .detail-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .detail-poster {
+    width: 280px;
+  }
+
+  .detail-title {
+    font-size: 2.5rem;
+  }
+
+  .detail-overview {
+    max-width: 100%;
+  }
+
+  .detail-buttons {
+    justify-content: center;
+  }
+
+  .seasons-section {
+    padding: 2rem 2%;
+  }
+
+  .seasons-title {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .detail-overlay {
+    padding: 2rem 2%;
+  }
+
+  .detail-poster {
+    width: 220px;
+  }
+
+  .detail-title {
+    font-size: 2rem;
+  }
+
+  .detail-overview {
+    font-size: 1rem;
+  }
+
+  .detail-buttons {
+    flex-direction: column;
+  }
+
+  .detail-button {
+    padding: 0.8rem 1.5rem;
+    justify-content: center;
+  }
+
+  .player-modal {
+    padding: 1rem;
+  }
+
+  .close-player {
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+  }
+
+  .close-player svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .fullscreen-toggle {
+    top: 1rem;
+    right: 3.5rem;
+    width: 40px;
+    height: 40px;
+  }
+
+  .fullscreen-toggle svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .next-episode-btn {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .next-episode-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .episode-info-overlay {
+    top: 1rem;
+    left: 1rem;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .seasons-section {
+    padding: 2rem 2%;
+  }
+
+  .seasons-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .movie-detail {
+    padding-top: 60px;
+  }
+
+  .detail-overlay {
+    padding: 1.5rem 1.5%;
+  }
+
+  .detail-poster {
+    width: 180px;
+  }
+
+  .detail-title {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+  }
+
+  .detail-meta {
+    font-size: 0.9rem;
+    gap: 1rem;
+  }
+
+  .detail-overview {
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .detail-button {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .detail-button svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .player-modal {
+    padding: 0.5rem;
+  }
+
+  .close-player {
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 36px;
+    height: 36px;
+  }
+
+  .close-player svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .fullscreen-toggle {
+    top: 0.5rem;
+    right: 3rem;
+    width: 36px;
+    height: 36px;
+  }
+
+  .fullscreen-toggle svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .next-episode-btn {
+    bottom: 0.8rem;
+    right: 0.8rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  .next-episode-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .episode-info-overlay {
+    top: 0.8rem;
+    left: 0.8rem;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.75rem;
+  }
+
+  .seasons-section {
+    padding: 1.5rem 1.5%;
+  }
+
+  .seasons-title {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+}

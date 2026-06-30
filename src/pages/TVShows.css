@@ -1,0 +1,37 @@
+.tv-page {
+  background-color: #000000;
+  min-height: 100vh;
+}
+
+.tv-content {
+  padding: 2rem 0;
+}
+
+.tv-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+}
+
+.loading-spinner {
+  width: 80px;
+  height: 80px;
+  border: 6px solid rgba(219, 0, 0, 0.2);
+  border-top-color: #db0000;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .tv-content {
+    padding: 1rem 0;
+  }
+}
