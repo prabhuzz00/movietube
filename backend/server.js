@@ -17,7 +17,8 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://movietube.in',
   'https://www.movietube.in',
-  // Add your production domain here
+  'http://movietube.in',
+  'http://www.movietube.in'
 ];
 
 app.use(cors({
