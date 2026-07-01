@@ -1,0 +1,191 @@
+.watchlist-container {
+  min-height: calc(100vh - 80px);
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.watchlist-header {
+  margin-bottom: 2rem;
+}
+
+.watchlist-header h1 {
+  color: #ffffff;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.watchlist-count {
+  color: #999;
+  font-size: 1.1rem;
+}
+
+.watchlist-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(219, 0, 0, 0.2);
+  border-top-color: #db0000;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.watchlist-loading p {
+  color: #999;
+  font-size: 1.1rem;
+}
+
+.watchlist-error {
+  background: rgba(219, 0, 0, 0.1);
+  border: 1px solid #db0000;
+  color: #ff4444;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.watchlist-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  gap: 1rem;
+}
+
+.watchlist-empty svg {
+  color: #564d4d;
+  margin-bottom: 1rem;
+}
+
+.watchlist-empty h2 {
+  color: #ffffff;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.watchlist-empty p {
+  color: #999;
+  font-size: 1.1rem;
+  max-width: 500px;
+  margin-bottom: 1rem;
+}
+
+.browse-button {
+  padding: 0.875rem 2rem;
+  background: #db0000;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.browse-button:hover {
+  background: #ff0000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(219, 0, 0, 0.4);
+}
+
+.watchlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 2rem;
+}
+
+.watchlist-item {
+  position: relative;
+}
+
+.remove-button {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(219, 0, 0, 0.8);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.remove-button:hover {
+  background: #db0000;
+  transform: translateY(-2px);
+}
+
+.remove-button svg {
+  flex-shrink: 0;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .watchlist-container {
+    padding: 1rem;
+    min-height: calc(100vh - 60px);
+  }
+
+  .watchlist-header h1 {
+    font-size: 2rem;
+  }
+
+  .watchlist-count {
+    font-size: 1rem;
+  }
+
+  .watchlist-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
+  }
+
+  .watchlist-empty h2 {
+    font-size: 1.5rem;
+  }
+
+  .watchlist-empty p {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+
+  .browse-button {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .watchlist-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .watchlist-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+
+  .remove-button {
+    font-size: 0.85rem;
+    padding: 0.4rem;
+  }
+}

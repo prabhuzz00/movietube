@@ -83,6 +83,46 @@
   margin-left: 4px;
 }
 
+.watchlist-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 5;
+  backdrop-filter: blur(5px);
+}
+
+.watchlist-btn:hover {
+  background: rgba(219, 0, 0, 0.9);
+  border-color: #db0000;
+  transform: scale(1.1);
+}
+
+.watchlist-btn.in-watchlist {
+  background: rgba(219, 0, 0, 0.9);
+  border-color: #db0000;
+}
+
+.watchlist-btn svg {
+  width: 20px;
+  height: 20px;
+  color: #ffffff;
+}
+
+.watchlist-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .movie-card-info {
   width: 100%;
   margin-top: auto;

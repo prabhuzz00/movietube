@@ -39,9 +39,23 @@
   text-decoration: none;
   letter-spacing: 3px;
   transition: transform 0.2s;
+  display: flex;
+  align-items: center;
+  height: 40px;
+}
+
+.logo-image {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.2s ease;
 }
 
 .logo:hover {
+  transform: scale(1.05);
+}
+
+.logo:hover .logo-image {
   transform: scale(1.05);
 }
 
@@ -195,6 +209,147 @@
   font-size: 0.8rem;
 }
 
+/* Header Right Section */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* User Menu */
+.user-menu-container {
+  position: relative;
+}
+
+.user-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.user-button:hover {
+  background-color: rgba(219, 0, 0, 0.1);
+}
+
+.user-button svg {
+  width: 32px;
+  height: 32px;
+  color: #db0000;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background-color: #000000;
+  border: 1px solid #564d4d;
+  border-radius: 8px;
+  min-width: 200px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  z-index: 1001;
+  overflow: hidden;
+}
+
+.user-info {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(86, 77, 77, 0.3);
+}
+
+.user-email {
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0;
+  word-break: break-word;
+}
+
+.user-name {
+  color: #999;
+  font-size: 0.85rem;
+  margin: 0.25rem 0 0 0;
+}
+
+.user-menu-divider {
+  height: 1px;
+  background-color: rgba(86, 77, 77, 0.3);
+}
+
+.user-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  color: #ffffff;
+  text-decoration: none;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.user-menu-item:hover {
+  background-color: rgba(86, 77, 77, 0.5);
+}
+
+.user-menu-item svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.user-menu-item.logout {
+  color: #ff4444;
+}
+
+/* Auth Buttons */
+.auth-buttons {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.login-btn,
+.register-btn {
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.login-btn {
+  color: #ffffff;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.login-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #ffffff;
+}
+
+.register-btn {
+  color: #ffffff;
+  background: #db0000;
+  border: 1px solid #db0000;
+}
+
+.register-btn:hover {
+  background: #ff0000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(219, 0, 0, 0.4);
+}
+
 @media (max-width: 768px) {
   .header {
     position: fixed;
@@ -206,7 +361,11 @@
   }
 
   .logo {
-    font-size: 1.5rem;
+    height: 32px;
+  }
+
+  .logo-image {
+    height: 100%;
   }
 
   .desktop-nav {

@@ -8,7 +8,9 @@ const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/favicon.svg',
+  '/favicon.png',
+  '/robots.txt',
+  '/sitemap.xml',
 ];
 
 // API domains to cache
@@ -184,8 +186,8 @@ self.addEventListener('push', (event) => {
   
   const options = {
     body: event.data ? event.data.text() : 'New content available!',
-    icon: '/icons/icon-192x192.png',
-    badge: '/icons/icon-72x72.png',
+    icon: '/icons/android/launchericon-192x192.png',
+    badge: '/icons/android/launchericon-72x72.png',
     vibrate: [200, 100, 200],
     tag: 'movieweb-notification',
     actions: [

@@ -1,0 +1,19 @@
+# robots.txt for Movie Tube
+User-agent: *
+Allow: /
+
+# Allow all search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Sitemap location
+Sitemap: https://movietube.in/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1
