@@ -1,13 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getImageUrl } from '../services/tmdb';
-import { watchlistAPI } from '../services/api';
-import { useAuth } from '../context/AuthContext';
+import { addToWatchlist, removeFromWatchlist, checkInWatchlist } from '../services/watchlist';
+import { useAuth } from '../context/AuthContextFirebase';
 import './MovieCard.css';
 
-const MovieCard = ({ movie, mediaType = 'movie', id, title: propTitle, poster, type: propType, showWatchlistButton = true }) => {
+const MovieCard = ({ movie, mediaType = 'movie', id, title: propTitle, poster, type: propType, showWatchlistButton = true, rating: propRating, year: propYear }) => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [inWatchlist, setInWatchlist] = useState(false);
   const [watchlistLoading, setWatchlistLoading] = useState(false);
   
@@ -16,25 +16,48 @@ const MovieCard = ({ movie, mediaType = 'movie', id, title: propTitle, poster, t
   const type = propType || movie?.media_type || mediaType;
   const title = propTitle || movie?.title || movie?.name;
   const releaseDate = movie?.release_date || movie?.first_air_date;
-  const year = releaseDate ? releaseDate.slice(0, 4) : 'N/A';
-  const rating = movie?.vote_average ? movie.vote_average.toFixed(1) : 'N/A';
+  const year = propYear || (releaseDate ? releaseDate.slice(0, 4) : null);
+  const rating = propRating || (movie?.vote_average ? movie.vote_average.toFixed(1) : null);
   
-  const posterUrl = poster || (movie?.poster_path
-    ? getImageUrl(movie.poster_path, 'w500')
-    : 'https://via.placeholder.com/500x750?text=No+Image');
+  const posterPath = poster || movie?.poster_path;
+  const posterUrl = posterPath
+    ? getImageUrl(posterPath, 'w500')
+    : 'https://via.placeholder.com/500x750?text=No+Image';
 
   useEffect(() => {
-    if (isAuthenticated && showWatchlistButton && itemId) {
-      checkWatchlistStatus();
+    if (isAuthenticated && showWatchlistButton && itemId && user) {
+      checkStatus();
+      
+      // Listen for watchlist updates from other components
+      const handleWatchlistUpdate = (event) => {
+        const { mediaId, mediaType, action } = event.detail;
+        // Convert both to strings for comparison
+        if (String(mediaId) === String(itemId) && mediaType === type) {
+          setInWatchlist(action === 'added');
+        }
+      };
+      
+      // Re-check when page becomes visible (user returns from detail page)
+      const handleVisibilityChange = () => {
+        if (!document.hidden && isAuthenticated && user) {
+          checkStatus();
+        }
+      };
+      
+      window.addEventListener('watchlistUpdated', handleWatchlistUpdate);
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+      
+      return () => {
+        window.removeEventListener('watchlistUpdated', handleWatchlistUpdate);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+      };
     }
-  }, [isAuthenticated, itemId, type]);
+  }, [isAuthenticated, itemId, type, user, showWatchlistButton]);
 
-  const checkWatchlistStatus = async () => {
-    try {
-      const status = await watchlistAPI.checkInWatchlist(type, itemId);
+  const checkStatus = async () => {
+    if (user && itemId) {
+      const status = await checkInWatchlist(user.id, type, itemId);
       setInWatchlist(status);
-    } catch (err) {
-      console.error('Error checking watchlist status:', err);
     }
   };
 
@@ -47,19 +70,33 @@ const MovieCard = ({ movie, mediaType = 'movie', id, title: propTitle, poster, t
     }
 
     setWatchlistLoading(true);
-    try {
-      if (inWatchlist) {
-        await watchlistAPI.removeFromWatchlist(type, itemId);
+    
+    if (inWatchlist) {
+      const result = await removeFromWatchlist(user.id, type, itemId);
+      if (result.success) {
         setInWatchlist(false);
-      } else {
-        await watchlistAPI.addToWatchlist(type, itemId, title, poster || movie?.poster_path);
-        setInWatchlist(true);
+        // Dispatch custom event to notify other components
+        window.dispatchEvent(new CustomEvent('watchlistUpdated', { 
+          detail: { mediaId: itemId, mediaType: type, action: 'removed' } 
+        }));
       }
-    } catch (err) {
-      console.error('Error toggling watchlist:', err);
-    } finally {
-      setWatchlistLoading(false);
+    } else {
+      const result = await addToWatchlist(user.id, {
+        mediaType: type,
+        mediaId: itemId,
+        title: title,
+        posterPath: posterPath
+      });
+      if (result.success) {
+        setInWatchlist(true);
+        // Dispatch custom event to notify other components
+        window.dispatchEvent(new CustomEvent('watchlistUpdated', { 
+          detail: { mediaId: itemId, mediaType: type, action: 'added' } 
+        }));
+      }
     }
+    
+    setWatchlistLoading(false);
   };
 
   const handleClick = () => {
@@ -88,19 +125,21 @@ const MovieCard = ({ movie, mediaType = 'movie', id, title: propTitle, poster, t
               <path d="M8 5v14l11-7z" />
             </svg>
           </button>
-          <div className="movie-card-info">
-            <div className="rating">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
-              {rating}
+          {rating && (
+            <div className="movie-card-info">
+              <div className="rating">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                {rating}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
       <div className="movie-card-details">
         <h3 className="movie-card-title">{title}</h3>
-        <p className="movie-card-year">{year}</p>
+        {year && <p className="movie-card-year">{year}</p>}
       </div>
     </div>
   );

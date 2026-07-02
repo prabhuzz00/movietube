@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { watchlistAPI } from '../services/api';
-import { useAuth } from '../context/AuthContext';
+import { getWatchlist, removeFromWatchlistById } from '../services/watchlist';
+import { useAuth } from '../context/AuthContextFirebase';
 import MovieCard from '../components/MovieCard';
 import './Watchlist.css';
 
@@ -9,44 +9,61 @@ const Watchlist = () => {
   const [watchlist, setWatchlist] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { isAuthenticated } = useAuth();
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Wait for auth to finish loading before checking authentication
+    if (authLoading) {
+      return;
+    }
+
     if (!isAuthenticated) {
       navigate('/login');
       return;
     }
 
-    fetchWatchlist();
-  }, [isAuthenticated, navigate]);
+    if (user) {
+      fetchWatchlist();
+    }
+    
+    // Listen for watchlist updates from other components
+    const handleWatchlistUpdate = () => {
+      if (user) {
+        fetchWatchlist();
+      }
+    };
+    
+    window.addEventListener('watchlistUpdated', handleWatchlistUpdate);
+    
+    return () => {
+      window.removeEventListener('watchlistUpdated', handleWatchlistUpdate);
+    };
+  }, [isAuthenticated, authLoading, navigate, user]);
 
   const fetchWatchlist = async () => {
-    try {
-      setLoading(true);
-      const data = await watchlistAPI.getWatchlist();
-      setWatchlist(data);
+    if (!user) return;
+    
+    setLoading(true);
+    const result = await getWatchlist(user.id);
+    
+    if (result.success) {
+      setWatchlist(result.watchlist);
       setError(null);
-    } catch (err) {
-      setError('Failed to load watchlist');
-      console.error('Error fetching watchlist:', err);
-    } finally {
-      setLoading(false);
+    } else {
+      setError(result.error);
+    }
+    setLoading(false);
+  };
+
+  const handleRemove = async (docId) => {
+    const result = await removeFromWatchlistById(docId);
+    if (result.success) {
+      setWatchlist(watchlist.filter(item => item.id !== docId));
     }
   };
 
-  const handleRemove = async (mediaType, mediaId) => {
-    try {
-      await watchlistAPI.removeFromWatchlist(mediaType, mediaId);
-      setWatchlist(watchlist.filter(item => 
-        !(item.media_type === mediaType && item.media_id === mediaId)
-      ));
-    } catch (err) {
-      console.error('Error removing from watchlist:', err);
-    }
-  };
-
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="watchlist-container">
         <div className="watchlist-loading">
@@ -86,17 +103,17 @@ const Watchlist = () => {
       ) : (
         <div className="watchlist-grid">
           {watchlist.map((item) => (
-            <div key={`${item.media_type}-${item.media_id}`} className="watchlist-item">
+            <div key={item.id} className="watchlist-item">
               <MovieCard
-                id={item.media_id}
+                id={item.mediaId}
                 title={item.title}
-                poster={item.poster_path}
-                type={item.media_type}
+                poster={item.posterPath}
+                type={item.mediaType}
                 showWatchlistButton={false}
               />
-              <button
+              {/* <button
                 className="remove-button"
-                onClick={() => handleRemove(item.media_type, item.media_id)}
+                onClick={() => handleRemove(item.id)}
                 title="Remove from watchlist"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -104,7 +121,7 @@ const Watchlist = () => {
                   <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
                 Remove
-              </button>
+              </button> */}
             </div>
           ))}
         </div>

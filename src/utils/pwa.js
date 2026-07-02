@@ -15,8 +15,6 @@ export const registerServiceWorker = async () => {
         scope: '/',
       });
 
-      console.log('[PWA] Service Worker registered successfully:', registration.scope);
-
       // Check for updates periodically
       setInterval(() => {
         registration.update();
@@ -29,7 +27,6 @@ export const registerServiceWorker = async () => {
         newWorker.addEventListener('statechange', () => {
           if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
             // New service worker available
-            console.log('[PWA] New version available! Please refresh.');
             
             // Optionally show update notification to user
             if (window.confirm('New version available! Reload to update?')) {
@@ -43,8 +40,6 @@ export const registerServiceWorker = async () => {
     } catch (error) {
       console.error('[PWA] Service Worker registration failed:', error);
     }
-  } else {
-    console.log('[PWA] Service Workers not supported');
   }
 };
 
@@ -55,7 +50,6 @@ export const unregisterServiceWorker = async () => {
   if ('serviceWorker' in navigator) {
     const registration = await navigator.serviceWorker.ready;
     await registration.unregister();
-    console.log('[PWA] Service Worker unregistered');
   }
 };
 
@@ -70,14 +64,11 @@ export const setupInstallPrompt = () => {
     // Stash the event so it can be triggered later
     deferredPrompt = e;
     
-    console.log('[PWA] Install prompt available');
-    
     // Dispatch custom event to notify app
     window.dispatchEvent(new CustomEvent('pwa-install-available'));
   });
 
   window.addEventListener('appinstalled', () => {
-    console.log('[PWA] App installed successfully');
     deferredPrompt = null;
     
     // Dispatch custom event
@@ -91,7 +82,6 @@ export const setupInstallPrompt = () => {
  */
 export const showInstallPrompt = async () => {
   if (!deferredPrompt) {
-    console.log('[PWA] Install prompt not available');
     return false;
   }
 
@@ -100,8 +90,6 @@ export const showInstallPrompt = async () => {
 
   // Wait for the user's response
   const { outcome } = await deferredPrompt.userChoice;
-  
-  console.log(`[PWA] User response: ${outcome}`);
   
   // Clear the deferred prompt
   deferredPrompt = null;
@@ -133,7 +121,6 @@ export const requestNotificationPermission = async () => {
   if ('Notification' in window && 'serviceWorker' in navigator) {
     try {
       const permission = await Notification.requestPermission();
-      console.log('[PWA] Notification permission:', permission);
       return permission === 'granted';
     } catch (error) {
       console.error('[PWA] Notification permission error:', error);
@@ -163,8 +150,6 @@ export const subscribeToPushNotifications = async () => {
             'YOUR_VAPID_PUBLIC_KEY'
           ),
         });
-        
-        console.log('[PWA] Push subscription:', subscription);
         
         // Send subscription to your server
         // await sendSubscriptionToServer(subscription);
@@ -205,7 +190,6 @@ export const checkForUpdates = async () => {
   if ('serviceWorker' in navigator) {
     const registration = await navigator.serviceWorker.ready;
     await registration.update();
-    console.log('[PWA] Checked for updates');
   }
 };
 
@@ -218,7 +202,6 @@ export const clearAllCaches = async () => {
     await Promise.all(
       cacheNames.map(cacheName => caches.delete(cacheName))
     );
-    console.log('[PWA] All caches cleared');
   }
 };
 
@@ -226,9 +209,6 @@ export const clearAllCaches = async () => {
 export const initPWA = () => {
   registerServiceWorker();
   setupInstallPrompt();
-  
-  console.log('[PWA] Initialized');
-  console.log('[PWA] App installed:', isAppInstalled());
 };
 
 export default {

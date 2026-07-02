@@ -21,12 +21,10 @@ const cachedRequest = async (cacheKey, ttl, requestFn) => {
   // Check cache first
   const cached = cacheService.get(cacheKey);
   if (cached) {
-    console.log(`Cache hit: ${cacheKey}`);
     return cached;
   }
 
   // Make API request
-  console.log(`Cache miss: ${cacheKey} - Fetching from API`);
   const data = await requestFn();
   
   // Store in cache

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { searchMulti } from '../services/tmdb';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContextFirebase';
 import './Header.css';
 
 const Header = () => {

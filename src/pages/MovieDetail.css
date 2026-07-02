@@ -146,6 +146,32 @@
   transform: scale(1.05);
 }
 
+.detail-button.watchlist {
+  background-color: rgba(219, 0, 0, 0.1);
+  color: #ffffff;
+  border: 2px solid #db0000;
+}
+
+.detail-button.watchlist:hover {
+  background-color: rgba(219, 0, 0, 0.3);
+  transform: scale(1.05);
+}
+
+.detail-button.watchlist.in-watchlist {
+  background-color: #db0000;
+  border-color: #db0000;
+}
+
+.detail-button.watchlist.in-watchlist:hover {
+  background-color: #831010;
+}
+
+.detail-button.watchlist:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .detail-cast {
   color: #ffffff;
 }

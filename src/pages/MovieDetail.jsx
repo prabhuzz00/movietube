@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getMovieDetails, getTVDetails, getImageUrl } from '../services/tmdb';
 import { getMovieEmbedUrl, getTVShowEmbedUrl, getEpisodeEmbedUrl } from '../services/twoembed';
+import { addToWatchlist, removeFromWatchlist, checkInWatchlist } from '../services/watchlist';
+import { useAuth } from '../context/AuthContextFirebase';
 import MovieRow from '../components/MovieRow';
 import Season from '../components/Season';
 import './MovieDetail.css';
@@ -9,11 +11,14 @@ import './MovieDetail.css';
 const MovieDetail = () => {
   const { type, id } = useParams();
   const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
   const [details, setDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showPlayer, setShowPlayer] = useState(false);
   const [currentEpisode, setCurrentEpisode] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [inWatchlist, setInWatchlist] = useState(false);
+  const [watchlistLoading, setWatchlistLoading] = useState(false);
   const playerModalRef = useRef(null);
 
   useEffect(() => {
@@ -32,7 +37,55 @@ const MovieDetail = () => {
 
     fetchDetails();
     window.scrollTo(0, 0);
+    
+    // Reset watchlist state when navigating to new content
+    setInWatchlist(false);
   }, [type, id]);
+
+  // Check watchlist status
+  useEffect(() => {
+    const checkStatus = async () => {
+      if (isAuthenticated && user && id) {
+        // Small delay to ensure Firebase write completes
+        await new Promise(resolve => setTimeout(resolve, 100));
+        const status = await checkInWatchlist(user.id, type, id);
+        setInWatchlist(status);
+      }
+    };
+    
+    checkStatus();
+    
+    // Listen for watchlist updates from other components
+    const handleWatchlistUpdate = (event) => {
+      const { mediaId, mediaType, action } = event.detail;
+      // Convert both to strings for comparison
+      if (String(mediaId) === String(id) && mediaType === type) {
+        setInWatchlist(action === 'added');
+      }
+    };
+    
+    // Re-check when page becomes visible (user returns from another tab/page)
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        checkStatus();
+      }
+    };
+    
+    // Re-check when window gains focus
+    const handleFocus = () => {
+      checkStatus();
+    };
+    
+    window.addEventListener('watchlistUpdated', handleWatchlistUpdate);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+    
+    return () => {
+      window.removeEventListener('watchlistUpdated', handleWatchlistUpdate);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [isAuthenticated, user, id, type]);
 
   useEffect(() => {
     const requestFullscreen = async () => {
@@ -49,7 +102,7 @@ const MovieDetail = () => {
           }
           setIsFullscreen(true);
         } catch (error) {
-          console.log('Fullscreen request failed:', error);
+          // Fullscreen request failed
         }
       }
     };
@@ -237,10 +290,46 @@ const MovieDetail = () => {
           }
           setIsFullscreen(true);
         } catch (error) {
-          console.log('Fullscreen request failed:', error);
+          // Fullscreen request failed
         }
       }
     }
+  };
+
+  const handleWatchlistToggle = async () => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+
+    setWatchlistLoading(true);
+    
+    if (inWatchlist) {
+      const result = await removeFromWatchlist(user.id, type, id);
+      if (result.success) {
+        setInWatchlist(false);
+        // Dispatch custom event to notify other components
+        window.dispatchEvent(new CustomEvent('watchlistUpdated', { 
+          detail: { mediaId: id, mediaType: type, action: 'removed' } 
+        }));
+      }
+    } else {
+      const result = await addToWatchlist(user.id, {
+        mediaType: type,
+        mediaId: id,
+        title: details?.title || details?.name,
+        posterPath: details?.poster_path
+      });
+      if (result.success) {
+        setInWatchlist(true);
+        // Dispatch custom event to notify other components
+        window.dispatchEvent(new CustomEvent('watchlistUpdated', { 
+          detail: { mediaId: id, mediaType: type, action: 'added' } 
+        }));
+      }
+    }
+    
+    setWatchlistLoading(false);
   };
 
   return (
@@ -342,6 +431,19 @@ const MovieDetail = () => {
                     Play Trailer/First Episode
                   </button>
                 )}
+                
+                <button 
+                  className={`detail-button watchlist ${inWatchlist ? 'in-watchlist' : ''}`}
+                  onClick={handleWatchlistToggle}
+                  disabled={watchlistLoading}
+                  title={inWatchlist ? 'Remove from watchlist' : 'Add to watchlist'}
+                >
+                  <svg viewBox="0 0 24 24" fill={inWatchlist ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                  </svg>
+                  {watchlistLoading ? 'Loading...' : (inWatchlist ? 'In Watchlist' : 'Add to Watchlist')}
+                </button>
+
                 {trailer && (
                   <a
                     href={`https://www.youtube.com/watch?v=${trailer.key}`}

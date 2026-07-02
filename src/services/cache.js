@@ -137,9 +137,7 @@ class CacheService {
         }
       });
 
-      if (removedCount > 0) {
-        console.log(`Cleaned up ${removedCount} expired cache entries`);
-      }
+      // Cleanup completed
     } catch (error) {
       console.warn('Failed to cleanup old entries:', error);
     }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { registerUser } from '../services/auth';
 import './Auth.css';
 
 const Register = () => {
@@ -10,7 +10,6 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { register } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -28,7 +27,7 @@ const Register = () => {
     }
 
     setLoading(true);
-    const result = await register(email, password, name);
+    const result = await registerUser(email, password, name);
     
     if (result.success) {
       navigate('/');

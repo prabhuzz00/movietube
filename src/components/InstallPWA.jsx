@@ -73,7 +73,7 @@ const InstallPWA = () => {
           </svg>
         </div>
         <div className="install-pwa-text">
-          <h3>Install MovieWeb</h3>
+          <h3>Install MovieTube</h3>
           <p>Install our app for a better experience with offline access</p>
         </div>
         <div className="install-pwa-actions">
